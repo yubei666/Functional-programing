@@ -15,12 +15,11 @@ object DataAnalyzer {
     val grouped = data.groupBy(_.energyType)
     for ((etype, records) <- grouped) {
       val values = records.map(_.value)
-      println(s"\n$etype Analysis:")
-      println(s"Mean: ${Utils.mean(values)}")
-      println(s"Median: ${Utils.median(values)}")
-      println(s"Mode: ${Utils.mode(values)}")
-      println(s"Range: ${Utils.range(values)}")
-      println(s"Midrange: ${Utils.midrange(values)}")
+      println(s"Mean: ${Utils.mean(values.toSeq)}")
+      println(s"Median: ${Utils.median(values.toSeq)}")
+      println(s"Mode: ${Utils.mode(values.toSeq)}")
+      println(s"Range: ${Utils.range(values.toSeq)}")
+      println(s"Midrange: ${Utils.midrange(values.toSeq)}")
     }
   }
 
