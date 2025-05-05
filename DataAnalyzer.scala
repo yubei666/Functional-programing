@@ -1,45 +1,53 @@
-
-//DataAnalyzer object: Provides data analysis and filtering features.
+// Name: Qi Zhou, Xiuzhu Li, Bhuwan Bista
+// DataAnalyzer object: Provides data analysis and filtering features.
 
 object DataAnalyzer {
   import DataLoader.data
 
-
-//Performs statistical analysis grouped by energy type.
+  private def printStats(values: Seq[Double]): Unit = {
+    println(s"Mean: ${Utils.mean(values)}")
+    println(s"Median: ${Utils.median(values)}")
+    println(s"Mode: ${Utils.mode(values)}")
+    println(s"Range: ${Utils.range(values)}")
+    println(s"Midrange: ${Utils.midrange(values)}")
+  }
 
   def analyze(): Unit = {
     if (data.isEmpty) {
       println("No data loaded.")
       return
     }
-    val grouped = data.groupBy(_.energyType)
-    for ((etype, records) <- grouped) {
-      val values = records.map(_.value)
-      println(s"Mean: ${Utils.mean(values.toSeq)}")
-      println(s"Median: ${Utils.median(values.toSeq)}")
-      println(s"Mode: ${Utils.mode(values.toSeq)}")
-      println(s"Range: ${Utils.range(values.toSeq)}")
-      println(s"Midrange: ${Utils.midrange(values.toSeq)}")
+
+    data.groupBy(_.energyType).foreach {
+      case (energyType, records) =>
+        val values = records.map(_.value)
+        println(s"Statistics for energy type: $energyType")
+        printStats(values.toSeq)  
     }
   }
 
-
-//Allows searching records by date and sorting them by value.
-   
+  // Allows searching records by date and sorting them by value.
   def searchAndSort(): Unit = {
     println("Enter date to search (DD/MM/YYYY):")
-    val input = scala.io.StdIn.readLine()
-    if (!Utils.validDateFormat(input)) {
+    val inputDate = scala.io.StdIn.readLine()
+
+    if (!Utils.validDateFormat(inputDate)) {
       println("Invalid date format. Please enter as DD/MM/YYYY")
       return
     }
-    val results = data.filter(_.date == input)
-    if (results.isEmpty) println("No data found for that date.")
-    else {
+
+    val filteredRecords = data.filter(_.date == inputDate)
+
+    if (filteredRecords.isEmpty) {
+      println("No data found for that date.")
+    } else {
       println("Sort by value ascending? (y/n):")
-      val sorted = if (scala.io.StdIn.readLine().toLowerCase == "y")
-        results.sortBy(_.value)
-      else results.sortBy(-_.value)
+      val ascending = scala.io.StdIn.readLine().toLowerCase == "y"
+      val sorted = if (ascending)
+        filteredRecords.sortBy(_.value)
+      else
+        filteredRecords.sortBy(r => -r.value)
+
       sorted.foreach(println)
     }
   }

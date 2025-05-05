@@ -1,9 +1,9 @@
+//Name: Qi Zhou, Xiuzhu Li
 //Menu object: Provides interactive menu for the user to choose system actions.
 
 object Menu {
   def show(): Unit = {
-    var continue = true
-    while (continue) {
+    def menuLoop(): Unit = {
       println("""
         |Choose an option:
         |1. Load data from file
@@ -14,15 +14,31 @@ object Menu {
         |6. Exit
         |Enter choice:
         |""".stripMargin)
+
       scala.io.StdIn.readLine().trim match {
-        case "1" => DataLoader.load("data/sample_data.csv")
-        case "2" => DataLoader.display()
-        case "3" => DataAnalyzer.analyze()
-        case "4" => DataAnalyzer.searchAndSort()
-        case "5" => ErrorHandler.testErrors()
-        case "6" => continue = false
-        case _   => println("Invalid choice.")
+        case "1" =>
+          DataLoader.load("data3.csv")
+          menuLoop()
+        case "2" =>
+          DataLoader.display()
+          menuLoop()
+        case "3" =>
+          DataAnalyzer.analyze()
+          menuLoop()
+        case "4" =>
+          DataAnalyzer.searchAndSort()
+          menuLoop()
+        case "5" =>
+          ErrorHandler.testErrors()
+          menuLoop()
+        case "6" =>
+          () 
+        case _ =>
+          println("Invalid choice.")
+          menuLoop()
       }
     }
+
+    menuLoop() 
   }
 }
